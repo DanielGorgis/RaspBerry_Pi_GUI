@@ -3,9 +3,8 @@ from tkinter import font as tkfont
 import requests
 from weather import Weather,Unit
 import time
-import sys
-import os,subprocess
-import py_compile
+import threading
+import random
 
 
 class SampleApp(tk.Tk):
@@ -26,7 +25,7 @@ class SampleApp(tk.Tk):
         container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-        for F in (StartPage, PageOne, PageTwo):
+        for F in (StartPage, PageOne, PageTwo,PageThree):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -58,14 +57,17 @@ class StartPage(tk.Frame):
         clock = tk.Label(self, text="fdf",font=("times",100,"bold"), bg="CadetBlue3")
         clock.pack(side="top", fill="x", pady=11)
         tick()
-        label = tk.Label(self, text="Daniel Gorgis", font=controller.title_font)
+        label = tk.Label(self, text="Raspberry PI Info Desk", font=controller.title_font)
         label.pack(side="top", fill="x", pady=10)
 
         button1 = tk.Button(self, text="BTC Price",
                             command=lambda: controller.show_frame("PageOne"), bg='red',font=controller.title_font)
         button2 = tk.Button(self, text="Weather",
                             command=lambda: controller.show_frame("PageTwo"),bg ='blue',font=controller.title_font)
-        button3 = tk.Button(self, text="New Func")
+        button3 = tk.Button(self, text="Advice of the day",
+                            command=lambda: controller.show_frame("PageThree"), bg='blue', font=controller.title_font)
+
+
         button1.pack()
         button2.pack()
         button3.pack()
@@ -101,7 +103,7 @@ class PageTwo(tk.Frame):
             dateF = (forecast.date)
             highF = (forecast.high)
             break
-        weather_Result = textF +" " + dateF+" " + highF +" Grader"
+        weather_Result = textF +" " + dateF+" " + highF +"°C"
 
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -110,6 +112,39 @@ class PageTwo(tk.Frame):
         button = tk.Button(self, text="Go to the start page",
                            command=lambda: controller.show_frame("StartPage"))
         button.pack()
+
+class PageThree(tk.Frame):
+
+
+
+    def __init__(self, parent, controller):
+        def test():
+            threading.Timer(5.0, test).start()
+            r2 = requests.get(' http://api.adviceslip.com/advice')
+            advice_result = r2.json()
+            label3.config(text=advice_result)
+            return advice_result
+        def reloadapi():
+            theRoll = ['http://api.adviceslip.com/advice','http://api.adviceslip.com/advice','http://api.adviceslip.com/advice']
+            threading.Timer(5.0, reloadapi ).start()
+            r2 = requests.get(random.choice(theRoll))
+            advice_result = r2.json()
+            return advice_result
+
+
+
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        label3 = tk.Button(self, text=reloadapi(), font=controller.title_font, command=reloadapi())
+        print("test")
+        label3.pack(side="top", fill="x", pady=10)
+        button3= tk.Button(self, text="Go to the start page",
+                           command=lambda: controller.show_frame("StartPage"))
+        button3.pack()
+
+
+
+
 
 
 if __name__ == "__main__":
