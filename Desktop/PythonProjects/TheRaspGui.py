@@ -129,7 +129,7 @@ class PageThree(tk.Frame):
                     text = r.recognize_google(audio)
                     print('You said: {}'.format(text))
 
-                    webbrowser.open('https://www.google.com/search?ei=rz-YW9v9FYyagAbW1ovQCQ&q='+text+'&gs_l=psy-ab.3..0i203k1l2j0i22i30k1l3j0i22i10i30k1j0i22i30k1l4.6736.7768.0.7863.7.6.0.1.1.0.85.459.6.6.0....0...1c.1.64.psy-ab..0.7.460...0j0i67k1j0i10k1.0.-1Teu4wljXk')
+                    webbrowser.open('https://en.wikipedia.org/wiki/'+text)
 
 
 
